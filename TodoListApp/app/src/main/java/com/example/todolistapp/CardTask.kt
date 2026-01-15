@@ -1,6 +1,8 @@
 package com.example.todolistapp
 
+import android.R
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,9 +31,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.todolistapp.ui.theme.CyanDark
+import com.example.todolistapp.ui.theme.CyanLight
 import com.example.todolistapp.ui.theme.PriorityHighDark
 import com.example.todolistapp.ui.theme.PriorityLowDark
 import com.example.todolistapp.ui.theme.PriorityMediumDark
@@ -39,7 +45,8 @@ import com.example.todolistapp.ui.theme.PriorityMediumDark
 @Composable
 fun CardTask(id:String , task: Task)
 {
-    Box(modifier = Modifier.fillMaxWidth().height(120.dp)) {
+    Box(modifier = Modifier
+        .fillMaxWidth().height(120.dp)) {
 
         var isChecked by rememberSaveable { mutableStateOf(false) }
         val Haute = PriorityHighDark
@@ -53,27 +60,45 @@ fun CardTask(id:String , task: Task)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
             val myCyan = Color(0xFF00FFFF)
+            var bgColor = if(isChecked) {CyanLight} else{Color.Transparent}
+
             Checkbox(
-                modifier = Modifier.size(50.dp).clip(shape = RoundedCornerShape(50)),
+                modifier = Modifier
+                    .padding(start = 12.5.dp, top = 0.dp , end = 20.dp , bottom = 0.dp)
+
+                    .border(color = CyanLight , width = 4.dp , shape = RoundedCornerShape(50))
+                    .size(50.dp)
+                    .background(color=bgColor,shape = RoundedCornerShape(50))
+                    .clip(shape = RoundedCornerShape(50))
+                    ,
                 onCheckedChange = {
                     isChecked = !isChecked
 
                 },
                 checked = isChecked,
                 colors = CheckboxDefaults.colors(
-                    uncheckedColor = myCyan,
-                    checkedColor = Color.Green
+                    uncheckedColor = Color.Transparent,
+                    checkedColor = CyanLight,
+                    checkmarkColor = Color.White
                 )
             )
             Column(modifier = Modifier.weight(1f).fillMaxHeight().padding(vertical = 20.dp), verticalArrangement = Arrangement.Center) {
                 Row(modifier= Modifier.fillMaxWidth().height(32.dp)) {
-                    Text( text = task.name, overflow = TextOverflow.Ellipsis )
+                    Text(
+                        text = task.name,
+                        overflow = TextOverflow.Ellipsis, fontSize = 19.5.sp ,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
-                Text(task.priority, color = MaterialTheme.colorScheme.onTertiary , modifier=Modifier.background(shape = RoundedCornerShape(8.dp), color = guessColor).padding(5.dp)
+                Text(task.priority,
+                    fontSize = 13.5.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onTertiary ,
+                    modifier=Modifier.background(shape = RoundedCornerShape(8.dp), color = guessColor).padding(5.dp)
                 )
 
             }

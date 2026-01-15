@@ -85,14 +85,11 @@ fun AddTaskScreen(navController: NavController) {
                     }
                 )
                 selectedDate?.let {
-                    Text(
-                        text = "Date sélectionnée : ${SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(Date(it))}",
-                        modifier = Modifier.padding(top = 80.dp)
 
-                    )
                     date = "${SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(Date(it))}"
                 }
             }
+
             Spacer(modifier = Modifier.height(20.dp))
 //            OutlinedTextField(onValueChange = { priority = it },
 //                value = priority,
