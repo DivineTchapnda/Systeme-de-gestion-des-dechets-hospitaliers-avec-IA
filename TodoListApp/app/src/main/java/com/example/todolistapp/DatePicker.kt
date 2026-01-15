@@ -3,6 +3,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -92,10 +93,12 @@ fun DatePickerTextField(
             text = input
         },
         readOnly = true,
+
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         label = { Text(label) },
+        shape= RoundedCornerShape(12.dp),
        //The icon
         trailingIcon = {
             Icon(

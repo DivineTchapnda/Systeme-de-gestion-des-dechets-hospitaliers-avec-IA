@@ -1,7 +1,10 @@
 package com.example.todolistapp
 
+import android.R
 import android.graphics.Paint
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,12 +13,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -30,10 +39,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.todolistapp.ui.theme.blueDark
+import com.example.todolistapp.ui.theme.gray
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -42,11 +55,14 @@ import java.util.Locale
 @Composable
 fun AddTaskScreen(navController: NavController) {
     var addTask by remember { mutableStateOf("") }
+    var addTaskError = addTask.isNotBlank()
     var name by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
     var priority by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf<Long?>(null) }
     var priorityClick by remember { mutableStateOf(false)}
+    var enabled = false
+
     val context = LocalContext.current
     Scaffold(
         topBar = {
@@ -64,21 +80,30 @@ fun AddTaskScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState())
         ) {
 
-            OutlinedTextField(onValueChange = { addTask = it },
+            Spacer(modifier=Modifier.height(45.dp))
+
+            Box(modifier = Modifier.fillMaxWidth().background( color = gray, shape = RoundedCornerShape(8.dp))){
+
+            OutlinedTextField(onValueChange = {
+                addTask = it
+                                              },
                 value = addTask,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Task") },
+                placeholder = { Text("Editer") },
                 maxLines = 1,
-                )
+                isError = !addTaskError,
+                trailingIcon ={ Icon(
+                    Icons.Filled.Edit ,
+                    contentDescription = null
+                ) }
+                )}
+            if (!addTaskError){
+                Text("Vous devez saisir une tache" , color = MaterialTheme.colorScheme.error)
+            }
             Spacer(modifier = Modifier.height(20.dp))
-//            OutlinedTextField(onValueChange = { date = it },
-//                value = date,
-//                shape = RoundedCornerShape(12.dp),
-//                modifier = Modifier.fillMaxWidth(),
-//                placeholder = { Text("Quelles est la tache a faire ?") })
 
-            Box(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth().background(color=gray , shape = RoundedCornerShape(8.dp))){
                 DatePickerTextField(
                     onDateSelected = { date ->
                         selectedDate = date
@@ -90,47 +115,105 @@ fun AddTaskScreen(navController: NavController) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-//            OutlinedTextField(onValueChange = { priority = it },
-//                value = priority,
-//                shape = RoundedCornerShape(12.dp),
-//                modifier = Modifier.fillMaxWidth(),
-//                placeholder = { Text("Quelles est la tache a faire ?") })
+            Spacer(modifier = Modifier.height(15.dp))
 
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Button(onClick = {
-                    priority = "Basse"
-                    priorityClick = true
-                } , colors = ButtonDefaults.buttonColors( containerColor =
-                Color.Red , contentColor = Color.White)) {
-                    Text("Basse" , textAlign = TextAlign.Center ) //modifier = )
-                }
-                Button(onClick = {
-                    priority = "Moyenne"
-                    priorityClick = true
-                } ,  colors = ButtonDefaults.buttonColors( containerColor =
-                    Color.Yellow, contentColor = Color.White)) {
-                    Text("Moyenne")
-                }
-                Button(onClick = {
-                    priority = "Haute"
-                    priorityClick = true
-                } ,  colors = ButtonDefaults.buttonColors( containerColor =
-                    Color.Green , contentColor = Color.White)) {
-                    Text("Haute")
+
+            Box(modifier = Modifier.fillMaxWidth().height(230.dp).background(color=gray , shape = RoundedCornerShape(8.dp))){
+                Column(modifier = Modifier.fillMaxSize().padding(vertical = 15.dp , horizontal = 15.dp)) {
+                    Text("Priorité" , fontWeight = FontWeight.Bold , color = Color.White)
+                    Spacer(modifier= Modifier.height(20.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
+
+                        Button(modifier = Modifier.weight(1f),
+                            onClick = {
+                                priority = "Basse"
+                                priorityClick = true
+
+                            } ,
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if(priority=="Basse") Color.Green else blueDark, contentColor = if(priority=="Basse") Color.White else Color.Black)                        )
+                                {
+                            Text("Basse" , textAlign = TextAlign.Center ) //modifier = )
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        Button(modifier = Modifier.weight(1f),
+                            onClick = {
+                                priority = "Moyenne"
+                                priorityClick = true
+
+                            } ,
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if(priority=="Moyenne") Color.Green else blueDark, contentColor = if(priority=="Moyenne") Color.White else Color.Black)                        )
+                        {
+                            Text("Moyenne")
+                        }
+
+                    }
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
+
+                        Button(modifier = Modifier.weight(1f), onClick = {
+                            priority = "Urgente"
+                            priorityClick = true
+
+                        },
+                            shape = RoundedCornerShape(
+                               8.dp
+                            ),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if(priority=="Urgente") Color.Green else blueDark, contentColor = if(priority=="Urgente") Color.White else Color.Black
+                            )) {
+                            Text("Urgente")
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        Button(modifier = Modifier.weight(1f), onClick = {
+                        },
+                            shape = RoundedCornerShape(
+                                0.dp
+                            ),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor =gray,
+                                contentColor = Color.Transparent
+                            )) {
+                            Text("")
+                        }
+                    }
+
                 }
             }
+            Spacer(modifier = Modifier.height(25.dp))
+            Button(
+                onClick = {
 
-            Button(onClick = {
-                Repository.addTask(Task(name= addTask, date = date, priority = priority))
-                navController.popBackStack()
-                Toast.makeText(context, "Tache Ajoutee ", Toast.LENGTH_LONG).show()
-            },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                modifier= Modifier.fillMaxWidth())
+                        Repository.addTask(Task(name= addTask, date = date, priority = priority))
+                        navController.popBackStack()
+                        Toast.makeText(context, "Tache ajoutée avec succès ", Toast.LENGTH_LONG).show()
+                    }
+
+            ,
+                enabled = addTaskError && (priority=="Moyenne" || priority=="Basse" || priority=="Haute"),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onBackground),
+                modifier= Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp)
+            )
             {
-                Text("Enregister", fontSize = 18.sp)
+                Icon(
+                    Icons.Filled.CheckCircle, contentDescription = null,
+                    modifier=Modifier.size(42.dp).padding(0.dp , 0.dp,10.dp)
+                )
+                Text("ENREGISTRER",
+                    modifier = Modifier.padding(vertical = 18.5.dp),
+                    fontSize = 20.sp ,
+                    fontWeight = FontWeight.Bold ,
+                    color = Color.White
+                )
             }
+
+
 
 
         }
