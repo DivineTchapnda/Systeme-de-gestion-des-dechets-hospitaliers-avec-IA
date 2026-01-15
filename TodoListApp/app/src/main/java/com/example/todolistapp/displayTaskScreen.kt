@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +25,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -46,6 +49,16 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayTaskScreen(navController: NavController) {
+    val today = remember {
+        val calc =java.util.Calendar.getInstance()
+        calc.set(
+            calc.get(java.util.Calendar.YEAR),
+            calc.get(java.util.Calendar.MONTH),
+            calc.get(java.util.Calendar.DAY_OF_MONTH),
+            0,0,0,
+        )
+        calc.timeInMillis
+    }
     var tasks = remember { mutableStateListOf<Pair<String , Task>>() }
     LaunchedEffect(Unit) {
         Repository.getTask {
@@ -55,27 +68,27 @@ fun DisplayTaskScreen(navController: NavController) {
         }
     }
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Mes Taches") },
-
-                colors = TopAppBarDefaults.topAppBarColors(titleContentColor = Color(0 , 0 , 0 )),
-
-            )
-        },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("add") })
+            FloatingActionButton(onClick = { navController.navigate("add") },
+                containerColor = MaterialTheme.colorScheme.onBackground,
+                contentColor = Color.Black)
             {
                 Icon(Icons.Default.Add, contentDescription = "Plus")
             }
         }
     )
     { paddingValues ->
-        Column(modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize()) {
+
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+
+            DisplayDateToday()
+            Spacer(modifier = Modifier.height(20.dp))
             LazyColumn() {
-                items(tasks) { (id ,task) ->
+                items(tasks) { (id, task) ->
                     Card(
                         modifier = Modifier
                             .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -84,46 +97,13 @@ fun DisplayTaskScreen(navController: NavController) {
                         shape = RoundedCornerShape(12.dp),
 
 
-
-                    ) {
-                        Box(modifier = Modifier.fillMaxWidth()) {
-                            var isChecked by rememberSaveable { mutableStateOf(false) }
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                val myCyan = Color(0xFF00FFFF)
-                                Checkbox(
-                                    modifier = Modifier.size(50.dp).clip(shape = RoundedCornerShape(50)),
-                                    onCheckedChange = {
-                                        isChecked = !isChecked
-
-                                    },
-                                    checked = isChecked,
-                                    colors = CheckboxDefaults.colors(
-                                        uncheckedColor = myCyan,
-                                        checkedColor = Color.Green
-                                    )
-                                )
-                                Text(text = task.name)
-                                Icon(
-                                    Icons.Default.Delete,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .clickable(onClick = { Repository.deleteTask(id) })
-                                )
-                            }
-
-                        }
-
-
+                        ) {
+                            CardTask(id , task)
                     }
                 }
             }
-        }
 
+        }
     }
 
 }

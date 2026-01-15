@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.SelectableDates
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Date
@@ -36,10 +37,24 @@ fun DatePickerTextField(
     val sdf = remember(dateFormat) {
         SimpleDateFormat(dateFormat, Locale.ENGLISH)
     }
-
+    val today = remember {
+        val calc =java.util.Calendar.getInstance()
+        calc.set(
+            calc.get(java.util.Calendar.YEAR),
+            calc.get(java.util.Calendar.MONTH),
+            calc.get(java.util.Calendar.DAY_OF_MONTH),
+            0,0,0,
+        )
+        calc.timeInMillis
+    }
     if (showDialog) {
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = selectedDateMillis
+            initialSelectedDateMillis = selectedDateMillis,
+            selectableDates = object : SelectableDates{
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return utcTimeMillis>=today
+                }
+            }
         )
         DatePickerDialog(
             onDismissRequest = { showDialog = false },
@@ -57,7 +72,7 @@ fun DatePickerTextField(
             },
             dismissButton = {
                 TextButton(onClick = { showDialog = false }) {
-                    Text("Cancel")
+                    Text("Retour")
                 }
             }
         ) {
@@ -81,6 +96,7 @@ fun DatePickerTextField(
             .fillMaxWidth()
             .padding(16.dp),
         label = { Text(label) },
+       //The icon
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,
@@ -94,23 +110,3 @@ fun DatePickerTextField(
 
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DatePickerTextFieldPreview() {
-//    var selectedDate by remember { mutableStateOf<Long?>(null) }
-//
-//    Box(modifier = Modifier.fillMaxWidth()) {
-//        DatePickerTextField(
-//            onDateSelected = { date ->
-//                selectedDate = date
-//            }
-//        )
-//        selectedDate?.let {
-//            Text(
-//                text = "Date sélectionnée : ${SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(Date(it))}",
-//                modifier = Modifier.padding(top = 80.dp)
-//            )
-//        }
-//    }
-//}
