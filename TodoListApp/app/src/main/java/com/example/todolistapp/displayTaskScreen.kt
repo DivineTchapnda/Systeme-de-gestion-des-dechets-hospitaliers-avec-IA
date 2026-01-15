@@ -68,6 +68,7 @@ fun DisplayTaskScreen(navController: NavController) {
         }
     }
     Scaffold(
+
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate("add") },
                 containerColor = MaterialTheme.colorScheme.onBackground,
@@ -85,22 +86,13 @@ fun DisplayTaskScreen(navController: NavController) {
                 .fillMaxSize()
         ) {
 
-            DisplayDateToday()
-            Spacer(modifier = Modifier.height(20.dp))
-            LazyColumn() {
-                items(tasks) { (id, task) ->
-                    Card(
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
-                            .fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(5.dp),
-                        shape = RoundedCornerShape(12.dp),
-
-
-                        ) {
-                            CardTask(id , task)
-                    }
-                }
+            if (tasks.isEmpty()) {
+                EmptyTaskScreen(
+                )
+            } else {
+                TaskListScreen(
+                    tasks = tasks,
+                )
             }
 
         }

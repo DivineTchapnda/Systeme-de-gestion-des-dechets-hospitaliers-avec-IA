@@ -18,10 +18,10 @@ val CyanDarkStart = Color(0xFF00ACC1)
 val CyanLight   = Color(0xFF00BFFF)
 
 val PriorityHighLight = Color(0xFFFF6B6B)
-val PriorityHighDark = Color.Transparent
+val PriorityHighDark = Color(0xFFA60501)
 
 val PriorityMediumLight = Color(0xFFFFF176)
-val PriorityMediumDark = Color.Transparent
+val PriorityMediumDark = Color(0xFFD0AD02)
 
 val PriorityLowLight = Color(0xFF81C784)
 val PriorityLowDark = Color(0xFF2E7D32)

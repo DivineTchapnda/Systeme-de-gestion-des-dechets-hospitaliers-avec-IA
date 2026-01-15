@@ -55,7 +55,7 @@ fun CardTask(id:String , task: Task)
         var guessColor= when(task.priority){
             "Basse"-> Basse
             "Moyenne"-> Moyenne
-            "Haute"-> Haute
+            "Urgente"-> Haute
             else->Color.Transparent
         }
         Row(
@@ -97,8 +97,8 @@ fun CardTask(id:String , task: Task)
                 Text(task.priority,
                     fontSize = 13.5.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onTertiary ,
-                    modifier=Modifier.background(shape = RoundedCornerShape(8.dp), color = guessColor).padding(5.dp)
+                    modifier=Modifier.background(shape = RoundedCornerShape(8.dp),
+                        color = guessColor).padding(5.dp)
                 )
 
             }

@@ -68,7 +68,7 @@ fun AddTaskScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = { Text("Ajouter une tache") },
-                colors = TopAppBarDefaults.topAppBarColors(titleContentColor = MaterialTheme.colorScheme.onPrimary)
+                colors = TopAppBarDefaults.topAppBarColors(titleContentColor = Color.White , containerColor = MaterialTheme.colorScheme.onBackground)
             )
         }
     ) { paddingValues ->
@@ -195,7 +195,7 @@ fun AddTaskScreen(navController: NavController) {
                     }
 
             ,
-                enabled = addTaskError && (priority=="Moyenne" || priority=="Basse" || priority=="Haute"),
+                enabled = addTaskError && (priority=="Moyenne" || priority=="Basse" || priority=="Urgente"),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onBackground),
                 modifier= Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp)
