@@ -84,14 +84,11 @@ fun DatePickerTextField(
 
     OutlinedTextField(
         value = text,
-        onValueChange = { input ->
-            try {
-                val date = sdf.parse(input.text)
+        onValueChange = {
+                val date = sdf.parse(it.text)
                 selectedDateMillis = date?.time
                 onDateSelected(selectedDateMillis)
-            } catch (_: Exception) {
-            }
-            text = input
+                text = it
         },
         readOnly = true,
 

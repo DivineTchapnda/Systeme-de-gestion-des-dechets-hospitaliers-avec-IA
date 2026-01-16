@@ -111,26 +111,20 @@ fun CardTask(id: String, task: Task) {
                     .height(32.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Icon(
-                        Icons.Default.DateRange,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
+                    if (task.date.isNotBlank()){
+                        Icon(
+                            Icons.Default.DateRange,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
 
+                            )
+                        Text(
+                            task.date,
+                            fontSize = 13.5.sp,
+                            fontWeight = FontWeight.SemiBold ,
+                            modifier = Modifier.padding(0.dp , 0.dp , 5.dp , 0.dp)
                         )
-                    Text(
-                        task.date,
-                        fontSize = 13.5.sp,
-                        fontWeight = FontWeight.SemiBold ,
-                       modifier = Modifier.padding(0.dp , 0.dp , 5.dp , 0.dp)
-                    )
-                    // Refactoring des dates et marges internes de la session date et priorité
-
-
-
-                    //
-                    // Note (A faire au Labo):
-                    // ~ Refaire le style de la date (Deja fait )
-                    // ~ Obliger l'utilisateur à remplir le champ date
+                    }
 
                     Text(
                         task.priority,
