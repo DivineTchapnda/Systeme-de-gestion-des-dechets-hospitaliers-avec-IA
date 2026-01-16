@@ -115,11 +115,17 @@ fun CardTask(id: String, task: Task) {
                         Icons.Default.DateRange,
                         contentDescription = null
                     )
-                    Text(task.date)
+                    Text(
+                        task.date,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.SemiBold)
 
+
+                    //
                     // Note (A faire au Labo):
-                    // ~ Refaire le style de la date
+                    // ~ Refaire le style de la date (Deja fait )
                     // ~ Obliger l'utilisateur à remplir le champ date
+                    //`` Revoir la logique generale des differents points de construction et de structure de controle
 
                     Text(
                         task.priority,
