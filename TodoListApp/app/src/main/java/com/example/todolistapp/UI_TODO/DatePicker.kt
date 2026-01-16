@@ -1,6 +1,6 @@
-package com.example.todolistapp
+package com.example.todolistapp.UI_TODO
+
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,11 +16,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.SelectableDates
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import java.util.Date
 
@@ -39,21 +39,21 @@ fun DatePickerTextField(
         SimpleDateFormat(dateFormat, Locale.ENGLISH)
     }
     val today = remember {
-        val calc =java.util.Calendar.getInstance()
+        val calc = Calendar.getInstance()
         calc.set(
-            calc.get(java.util.Calendar.YEAR),
-            calc.get(java.util.Calendar.MONTH),
-            calc.get(java.util.Calendar.DAY_OF_MONTH),
-            0,0,0,
+            calc.get(Calendar.YEAR),
+            calc.get(Calendar.MONTH),
+            calc.get(Calendar.DAY_OF_MONTH),
+            0, 0, 0,
         )
         calc.timeInMillis
     }
     if (showDialog) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = selectedDateMillis,
-            selectableDates = object : SelectableDates{
+            selectableDates = object : SelectableDates {
                 override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    return utcTimeMillis>=today
+                    return utcTimeMillis >= today
                 }
             }
         )
@@ -89,17 +89,19 @@ fun DatePickerTextField(
                 val date = sdf.parse(input.text)
                 selectedDateMillis = date?.time
                 onDateSelected(selectedDateMillis)
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+            }
             text = input
         },
         readOnly = true,
 
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { showDialog = true },
         label = { Text(label) },
-        shape= RoundedCornerShape(12.dp),
-       //The icon
+        shape = RoundedCornerShape(12.dp),
+        //The icon
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,
@@ -109,7 +111,7 @@ fun DatePickerTextField(
         },
         singleLine = true,
 
-    )
+        )
 
 }
 

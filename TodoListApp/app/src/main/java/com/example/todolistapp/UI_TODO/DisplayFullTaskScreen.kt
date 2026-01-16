@@ -1,4 +1,4 @@
-package com.example.todolistapp
+package com.example.todolistapp.UI_TODO
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,9 +12,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.todolistapp.Data.Task
 
 @Composable
-fun TaskListScreen(tasks:(List<Pair<String , Task>>)) {
+fun TaskListScreen(tasks: (List<Pair<String, Task>>)) {
+
     DisplayDateToday()
     Spacer(modifier = Modifier.height(20.dp))
     LazyColumn() {
@@ -25,10 +27,9 @@ fun TaskListScreen(tasks:(List<Pair<String , Task>>)) {
                     .fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(5.dp),
                 shape = RoundedCornerShape(12.dp),
-
-
-                ) {
-                CardTask(id , task)
+                )
+            {
+                CardTask(id, task)
             }
         }
     }
